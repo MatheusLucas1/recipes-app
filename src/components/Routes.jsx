@@ -12,8 +12,8 @@ export default function Routes() {
   return (
     <Switch>
       <Route exact path="/" component={ Login } />
-      <Route exact path="/meals" component={ Recipes } />
-      <Route exact path="/drinks" component={ Recipes } />
+      <Route exact path="/meals" render={ () => <Recipes title="Meals" /> } />
+      <Route exact path="/drinks" render={ () => <Recipes title="Drinks" /> } />
       <Route exact path="/meals/:id-da-receita" component={ RecipeDetails } />
       <Route exact path="/drinks/:id-da-receita" component={ RecipeDetails } />
       <Route
