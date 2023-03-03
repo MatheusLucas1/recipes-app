@@ -8,7 +8,6 @@ export default function Recipes({ title = 'Meals' }) {
   const { recipes } = useContext(RecipesContext);
   const pathName = title.slice(0, title.length - 1);
   const recipesPerPage = 12;
-
   return (
     <div>
       Recipes
