@@ -14,16 +14,16 @@ export default function Routes() {
       <Route exact path="/" component={ Login } />
       <Route exact path="/meals" render={ () => <Recipes title="Meals" /> } />
       <Route exact path="/drinks" render={ () => <Recipes title="Drinks" /> } />
-      <Route exact path="/meals/:id-da-receita" component={ RecipeDetails } />
-      <Route exact path="/drinks/:id-da-receita" component={ RecipeDetails } />
+      <Route exact path="/meals/:id" component={ RecipeDetails } />
+      <Route exact path="/drinks/:id" component={ RecipeDetails } />
       <Route
         exact
-        path="/meals/:id-da-receita/in-progress"
+        path="/meals/:id/in-progress"
         component={ RecipeInProgress }
       />
       <Route
         exact
-        path="/drinks/:id-da-receita/in-progress"
+        path="/drinks/:id/in-progress"
         component={ RecipeInProgress }
       />
       <Route exact path="/profile" component={ Profile } />

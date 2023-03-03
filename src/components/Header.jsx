@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import SearchContext from '../context/SearchContext';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header({ title, showSearch = true }) {
   const history = useHistory();
@@ -28,15 +29,7 @@ function Header({ title, showSearch = true }) {
       }
       {
         visible && (
-          <label htmlFor="search-input">
-            Busca
-            <input
-              type="text"
-              name="searchInput"
-              id="search-input"
-              data-testid="search-input"
-            />
-          </label>
+          <SearchBar />
         )
       }
     </div>
