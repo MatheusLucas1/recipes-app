@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import SearchContext from '../context/SearchContext';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 
-export default function Header({ title = 'Header', showSearch = true }) {
+function Header({ title, showSearch = true }) {
   const history = useHistory();
+  const { visible, setVisible } = useContext(SearchContext);
 
   const handleClickProfile = () => {
     history.push('/profile');
@@ -19,9 +21,22 @@ export default function Header({ title = 'Header', showSearch = true }) {
       </button>
       {
         showSearch && (
-          <button type="button">
+          <button type="button" onClick={ () => setVisible(!visible) }>
             <img src={ searchIcon } alt="Ícone de Busca" data-testid="search-top-btn" />
           </button>
+        )
+      }
+      {
+        visible && (
+          <label htmlFor="search-input">
+            Busca
+            <input
+              type="text"
+              name="searchInput"
+              id="search-input"
+              data-testid="search-input"
+            />
+          </label>
         )
       }
     </div>
@@ -29,6 +44,8 @@ export default function Header({ title = 'Header', showSearch = true }) {
 }
 
 Header.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
   showSearch: PropTypes.bool,
 };
+
+export default Header;

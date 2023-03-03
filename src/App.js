@@ -3,11 +3,14 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Routes from './components/Routes';
 import LoginProvider from './context/LoginProvider';
+import SearchProvider from './context/SearchProvider';
 
 function App() {
   return (
     <LoginProvider>
-      <Routes />
+      <SearchProvider>
+        <Routes />
+      </SearchProvider>
     </LoginProvider>
   );
 }
