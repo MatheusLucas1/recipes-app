@@ -4,7 +4,7 @@ import Header from '../components/Header';
 export default function Profile() {
   return (
     <div>
-      Profile
+      Profileeeeee
       <Header title="Profile" showSearch={ false } />
     </div>
   );
