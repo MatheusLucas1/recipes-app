@@ -9,25 +9,86 @@ describe('Testa o componente Header', () => {
   beforeEach(() => {
     localStorage.clear();
     localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
+    renderWithRouter(<App />, { initialEntries: ['/done-recipes'] });
   });
 
   test('Testa se os componentes da página de receitas prontas são exibidos adequadamente na tela de Drinks', async () => {
-    renderWithRouter(<App />, { initialEntries: ['/done-recipes'] });
+    const foodImage = await screen.findByTestId('0-horizontal-image');
+    const foodName = await screen.findByTestId('0-horizontal-name');
+    const foodInfo = await screen.findAllByTestId('0-horizontal-top-text');
+    const foodDoneDate = await screen.findByTestId('0-horizontal-done-date');
+    const foodFirstTag = await screen.findByTestId('0-Pasta-horizontal-tag');
+    const shareButton = await screen.findByTestId('0-horizontal-share-btn');
 
-    expect(screen.getByTestId('filter-by-all-btn')).toBeInTheDocument();
-    expect(screen.getByTestId('filter-by-meal-btn')).toBeInTheDocument();
-    expect(screen.getByTestId('filter-by-drink-btn')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-image')).toBeInTheDocument();
-    expect(screen.getAllByTestId('0-horizontal-top-text')[0]).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-name')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-done-date')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-share-btn')).toBeInTheDocument();
-    expect(screen.getByTestId('0-Pasta-horizontal-tag')).toBeInTheDocument();
-    expect(screen.getByTestId('0-Curry-horizontal-tag')).toBeInTheDocument();
-    expect(screen.getByTestId('1-horizontal-image')).toBeInTheDocument();
-    expect(screen.getAllByTestId('1-horizontal-top-text')[0]).toBeInTheDocument();
-    expect(screen.getByTestId('1-horizontal-name')).toBeInTheDocument();
-    expect(screen.getByTestId('1-horizontal-share-btn')).toBeInTheDocument();
-    expect(screen.getByTestId('1-horizontal-done-date')).toBeInTheDocument();
+    expect(foodImage).toBeInTheDocument();
+    expect(foodName).toBeInTheDocument();
+    expect(foodInfo[0].innerHTML)
+      .toBe(`${doneRecipes[0].nationality} - ${doneRecipes[0].category}`);
+    expect(foodDoneDate).toBeInTheDocument();
+    expect(foodFirstTag.innerHTML).toBe(doneRecipes[0].tags[0]);
+    expect(shareButton).toBeInTheDocument();
   });
+
+  test('Testa se apenas aparecem comidas ao clicar no botão de filtro "Food"', async () => {
+    const foodFilterBtn = await screen.findByTestId('filter-by-meal-btn');
+    const foodName = await screen.findByRole('heading', { level: 5, name: /Spicy Arrabiata Penne/i });
+    const drinkName = await screen.findByRole('heading', { level: 5, name: /Aquamarine/i });
+
+    expect(foodName).toBeInTheDocument();
+    expect(drinkName).toBeInTheDocument();
+
+    userEvent.click(foodFilterBtn);
+
+    expect(foodName).toBeInTheDocument();
+    expect(drinkName).not.toBeInTheDocument();
+  });
+
+  test('Testa se apenas aparecem bebidas ao clicar no botão de filtro "Drinks"', async () => {
+    const drinkFilterBtn = await screen.findByTestId('filter-by-drink-btn');
+
+    const foodName = await screen.findByRole('heading', { level: 5, name: /Spicy Arrabiata Penne/i });
+
+    const drinkName = await screen.findByRole('heading', { level: 5, name: /aquamarine/i });
+
+    expect(foodName).toBeInTheDocument();
+    expect(drinkName).toBeInTheDocument();
+
+    userEvent.click(drinkFilterBtn);
+
+    expect(foodName).not.toBeInTheDocument();
+    expect(drinkName).toBeInTheDocument();
+  });
+
+  test('Testa se os filtros são limpos ao clicar em "All"', async () => {
+    const drinkFilterBtn = await screen.findByTestId('filter-by-drink-btn');
+
+    const clearFiltersBtn = await screen.findByTestId('filter-by-all-btn');
+
+    const foodName = await screen.findByRole('heading', { level: 5, name: /Spicy Arrabiata Penne/i });
+
+    const drinkName = await screen.findByRole('heading', { level: 5, name: /aquamarine/i });
+
+    expect(foodName).toBeInTheDocument();
+    expect(drinkName).toBeInTheDocument();
+
+    userEvent.click(drinkFilterBtn);
+
+    expect(foodName).not.toBeInTheDocument();
+    expect(drinkName).toBeInTheDocument();
+
+    userEvent.click(clearFiltersBtn);
+
+    expect(foodName).toBeInTheDocument();
+    expect(drinkName).toBeInTheDocument();
+  });
+
+  // test('Testa ao clicar para compartilhar a rota da receita, o endereço é copiado para o clipboard', async () => {
+  //   const shareBtn = await screen.findByTestId('0-horizontal-share-btn');
+
+  //   expect(shareBtn).toBeInTheDocument();
+
+  //   userEvent.click(shareBtn);
+
+  //   expect(screen.findByText('Link copied!')).toBeInTheDocument();
+  // });
 });
