@@ -1,80 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import copy from 'clipboard-copy';
 import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
-import { mockRecipes } from '../mocks/mockDoneRecipes';
 import ToastContainer from './ToastContainer';
+import DoneRecipesContext from '../context/DoneRecipesContext';
 
 function DoneRecipes() {
-  const [completedRecipes, setCompletedRecipes] = useState([]);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    function setMock() {
-      const recipes = mockRecipes.map((recipe) => {
-        if (recipe.idMeal) {
-          return {
-            id: recipe.idMeal,
-            type: 'meal',
-            nationality: recipe.strArea,
-            category: recipe.strCategory || '',
-            alcoholicOrNot: '',
-            name: recipe.strMeal,
-            image: recipe.strMealThumb,
-            doneDate: Date.now(),
-            tags: recipe.strTags ? recipe.strTags.split(',').slice(0, 2) : [],
-          };
-        }
-        if (!recipe.idMeal) {
-          return {
-            id: recipe.idDrink,
-            type: 'drink',
-            nationality: recipe.strArea || '',
-            category: recipe.strCategory || '',
-            alcoholicOrNot: recipe.strAlcoholic === 'Alcoholic'
-              ? 'alcoholic' : 'non-alcoholic',
-            name: recipe.strDrink,
-            image: recipe.strDrinkThumb,
-            doneDate: Date.now(),
-            tags: recipe.strTags ? recipe.strTags.split(',').slice(0, 2) : [],
-          };
-        }
-        return recipe;
-      });
-      localStorage.setItem('doneRecipes', JSON.stringify(recipes));
-    }
-    setMock();
-    const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
-    setCompletedRecipes(doneRecipes);
-  }, []);
-
-  const shareRecipe = (id, type) => {
-    copy(`http://localhost:3000/${type}s/${id}`);
-    setVisible(true);
-    const number = 2000;
-    setTimeout(() => {
-      setVisible(false);
-    }, number);
-  };
-
-  const filterDrinks = () => {
-    const compRecipe = JSON.parse(localStorage.getItem('doneRecipes')) || [];
-    const filtered = compRecipe.filter((recip) => recip.type === 'drink');
-    setCompletedRecipes(filtered);
-  };
-
-  const filterFood = () => {
-    const compRecipe = JSON.parse(localStorage.getItem('doneRecipes')) || [];
-    const filtered = compRecipe.filter((recip) => recip.type === 'meal');
-    setCompletedRecipes(filtered);
-  };
-
-  const clearFilters = () => {
-    const compRecipe = JSON.parse(localStorage.getItem('doneRecipes')) || [];
-    setCompletedRecipes(compRecipe);
-  };
-
+  const { completedRecipes,
+    visible,
+    shareRecipe,
+    handleClearFilters,
+    handleFilterDrinks,
+    handleFilterFoods } = useContext(DoneRecipesContext);
   return (
     <>
       <Header name="Receitas Feitas" show="false" />
@@ -84,21 +21,21 @@ function DoneRecipes() {
           <button
             type="button"
             data-testid="filter-by-all-btn"
-            onClick={ clearFilters }
+            onClick={ handleClearFilters }
           >
             All
           </button>
           <button
             type="button"
             data-testid="filter-by-meal-btn"
-            onClick={ filterFood }
+            onClick={ handleFilterFoods }
           >
             Food
           </button>
           <button
             type="button"
             data-testid="filter-by-drink-btn"
-            onClick={ filterDrinks }
+            onClick={ handleFilterDrinks }
           >
             Drinks
           </button>

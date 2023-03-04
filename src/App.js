@@ -5,14 +5,17 @@ import Routes from './components/Routes';
 import LoginProvider from './context/LoginProvider';
 import SearchProvider from './context/SearchProvider';
 import RecipesProvider from './context/RecipesProvider';
+import DoneRecipesProvider from './context/DoneRecipesProvider';
 
 function App() {
   return (
     <LoginProvider>
       <RecipesProvider>
-        <SearchProvider>
-          <Routes />
-        </SearchProvider>
+        <DoneRecipesProvider>
+          <SearchProvider>
+            <Routes />
+          </SearchProvider>
+        </DoneRecipesProvider>
       </RecipesProvider>
     </LoginProvider>
   );
