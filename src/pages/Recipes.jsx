@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import RecipeCard from '../components/RecipeCard';
 import RecipesContext from '../context/RecipesContext';
+import Footer from '../components/Footer';
 
 export default function Recipes({ title = 'Meals' }) {
   const { recipes } = useContext(RecipesContext);
@@ -24,6 +25,7 @@ export default function Recipes({ title = 'Meals' }) {
           ),
         )
       }
+      <Footer />
     </div>
   );
 }
