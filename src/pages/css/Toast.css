@@ -1,7 +1,7 @@
 div .taost {
-  position: fixed;
   bottom: 48px;
-  z-index: 2;
   left: 50%;
+  position: fixed;
   transform: translateX(-50%);
+  z-index: 2;
 }
