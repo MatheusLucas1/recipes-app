@@ -8,7 +8,7 @@ import SearchContext from '../context/SearchContext';
 import CategoriesContext from '../context/CategoriesContext';
 import './css/Recipes.css';
 
-export default function Recipes({ title = 'Meals' }) {
+export default function Recipes({ title }) {
   const { recipes, setRecipes } = useContext(RecipesContext);
   const { handleSearch } = useContext(SearchContext);
   const { getCategories } = useContext(CategoriesContext);
@@ -31,8 +31,9 @@ export default function Recipes({ title = 'Meals' }) {
           recipes.slice(0, recipes < recipesPerPage ? recipes : recipesPerPage).map(
             (recipe, i) => (
               <RecipeCard
-                key={ recipe[`id${pathName}`] }
+                key={ `${recipe[`id${pathName}`]}-${i}` }
                 id={ i }
+                path={ `/${title.toLowerCase()}/${recipe[`id${pathName}`]}` }
                 name={ recipe[`str${pathName}`] }
                 image={ recipe[`str${pathName}Thumb`] }
               />
@@ -46,5 +47,5 @@ export default function Recipes({ title = 'Meals' }) {
 }
 
 Recipes.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
 };

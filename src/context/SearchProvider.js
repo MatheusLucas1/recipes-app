@@ -16,19 +16,21 @@ function SearchProvider({ children }) {
       return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/filter.php?i=${searchInput}`;
     case 'name':
       return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/search.php?s=${searchInput}`;
+    case 'category':
+      return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/filter.php?c=${searchInput}`;
     default:
       return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/search.php?f=${searchInput}`;
     }
   };
 
   const handleSearch = useCallback(async (params) => {
-    const { path } = params;
+    const { path, searchRadio } = params;
     const data = await fetchData(selectApi(params));
     if (data.length === 0) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
     }
     setRecipes(data ?? []);
-    if (data.length === 1) {
+    if (data.length === 1 && searchRadio !== 'category') {
       history.push(`${path}/${data[0].idMeal || data[0].idDrink}`);
     }
   }, [setRecipes, history]);
