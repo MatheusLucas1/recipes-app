@@ -7,10 +7,10 @@ export default function CategoriesFilter() {
   return (
     <div>
       {
-        categories.slice(0, maxCategories).map((category) => (
+        categories.slice(0, maxCategories).map((category, i) => (
           <button
             type="button"
-            key={ category.strCategory }
+            key={ `${category.strCategory}-${i}` }
             data-testid={ `${category.strCategory}-category-filter` }
           >
             {category.strCategory}

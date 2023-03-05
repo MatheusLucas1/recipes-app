@@ -16,7 +16,6 @@ export default function Recipes({ title = 'Meals' }) {
   const recipesPerPage = 12;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     setRecipes([]);
     handleSearch(
       { searchInput: '', searchRadio: 'name', path: `/${title.toLowerCase()}` },
