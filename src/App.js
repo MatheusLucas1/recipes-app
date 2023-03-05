@@ -5,13 +5,16 @@ import Routes from './components/Routes';
 import LoginProvider from './context/LoginProvider';
 import SearchProvider from './context/SearchProvider';
 import RecipesProvider from './context/RecipesProvider';
+import CategoriesProvider from './context/CategoriesProvider';
 
 function App() {
   return (
     <LoginProvider>
       <RecipesProvider>
         <SearchProvider>
-          <Routes />
+          <CategoriesProvider>
+            <Routes />
+          </CategoriesProvider>
         </SearchProvider>
       </RecipesProvider>
     </LoginProvider>
