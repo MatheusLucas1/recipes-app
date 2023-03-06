@@ -1,31 +1,87 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
+import SearchContext from '../context/SearchContext';
 
 export default function RecipeInProgress() {
   const { recipeDetails } = useContext(RecipesContext);
-  const { strMeal, strMealThumb, strCategory, strInstructions } = recipeDetails;
+  const { handleSearch } = useContext(SearchContext);
+  const history = useHistory();
+  const { pathname } = history.location;
+  const [details, setDetails] = useState({
+    id: '',
+    image: '',
+    title: '',
+    category: '',
+    ingredients: [],
+    video: undefined,
+    instructions: '',
+    nationality: '',
+    alcoholicOrNot: '',
+  });
+
+  useEffect(() => {
+    const id = pathname.split('/')[2];
+    const path = `/${pathname.split('/')[1]}`;
+    handleSearch({
+      searchRadio: 'lookup',
+      path,
+      searchInput: id,
+    });
+  }, [handleSearch, pathname]);
+
+  useEffect(() => {
+    const ingredients = [];
+    const keys = Object.keys(recipeDetails);
+    const ingredientsKeys = keys.filter((key) => key.includes('strIngredient'));
+    ingredientsKeys.forEach((key) => {
+      if (recipeDetails[key]) {
+        ingredients.push(recipeDetails[key]);
+      }
+    });
+    setDetails({
+      id: (recipeDetails.idMeal || recipeDetails.idDrink) ?? '',
+      image: recipeDetails.strMealThumb || recipeDetails.strDrinkThumb,
+      title: recipeDetails.strMeal || recipeDetails.strDrink,
+      category: recipeDetails.strCategory,
+      ingredients,
+      video: recipeDetails.strYoutube ? (
+        recipeDetails.strYoutube.replace('watch?v=', 'embed/')
+      ) : undefined,
+      instructions: recipeDetails.strInstructions,
+      nationality: recipeDetails.strArea,
+      alcoholicOrNot: recipeDetails.strAlcoholic,
+    });
+  }, [recipeDetails]);
   return (
     <div>
       <header>
         <button type="button" data-testid="share-btn">Share</button>
         <button type="button" data-testid="favorite-btn">Favorite</button>
         <p data-testid="recipe-category">
-          { strCategory }
+          { details.category }
         </p>
         <img
           data-testid="recipe-photo"
-          src={ strMealThumb }
-          alt={ strMeal }
+          src={ details.image }
+          alt={ details.title }
         />
-        <h1 data-testid="recipe-title">{ strMeal }</h1>
+        <h1 data-testid="recipe-title">{ details.title }</h1>
       </header>
-      <div>
-        <h4>Category</h4>
 
-      </div>
+      {details.ingredients.map((ingredient, index) => (
+        <label
+          key={ `${details.id}-${index}` }
+          data-testid={ `${index}-ingredient-step` }
+        >
+          <input type="checkbox" />
+          {ingredient}
+        </label>
+      ))}
+
       <section>
         <h4>Instructions</h4>
-        <p data-testid="instructions">{ strInstructions }</p>
+        <p data-testid="instructions">{ details.instructions }</p>
       </section>
       <footer>
         <button type="button" data-testid="finish-recipe-btn">FINISH RECIPE</button>
