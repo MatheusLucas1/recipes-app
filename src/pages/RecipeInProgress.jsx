@@ -8,6 +8,7 @@ export default function RecipeInProgress() {
   const { handleSearch } = useContext(SearchContext);
   const history = useHistory();
   const { pathname } = history.location;
+  const [checkedIngredients, setCheckedIngredients] = useState([]);
   const [details, setDetails] = useState({
     id: '',
     image: '',
@@ -53,6 +54,27 @@ export default function RecipeInProgress() {
       alcoholicOrNot: recipeDetails.strAlcoholic,
     });
   }, [recipeDetails]);
+
+  useEffect(() => {
+    const ceckedIngredients = JSON.parse(localStorage.getItem('ceckedIngredients'));
+    if (ceckedIngredients) {
+      setCheckedIngredients(ceckedIngredients);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('ceckedIngredients', JSON.stringify(checkedIngredients));
+  }, [checkedIngredients]);
+
+  const handleCheckboxChange = ({ target }, index) => {
+    const isChecked = target.checked;
+    if (isChecked) {
+      setCheckedIngredients([...checkedIngredients, index]);
+    } else {
+      setCheckedIngredients(checkedIngredients.filter((i) => i !== index));
+    }
+  };
+
   return (
     <div>
       <header>
@@ -73,8 +95,15 @@ export default function RecipeInProgress() {
         <label
           key={ `${details.id}-${index}` }
           data-testid={ `${index}-ingredient-step` }
+          style={ { textDecoration: (
+            checkedIngredients.includes(index)
+              ? 'line-through solid rgb(0, 0, 0)' : 'none') } }
         >
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            checked={ checkedIngredients.includes(index) }
+            onChange={ (event) => handleCheckboxChange(event, index) }
+          />
           {ingredient}
         </label>
       ))}
