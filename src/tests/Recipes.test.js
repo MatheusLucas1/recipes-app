@@ -20,7 +20,7 @@ describe('Testa a Tela Recipes', () => {
     jest.clearAllMocks();
   });
 
-  test.only('Testa se os componentes são exibidos adequadamente na tela de Drinks', async () => {
+  test('Testa se os componentes são exibidos adequadamente na tela de Drinks', async () => {
     const { history } = renderWithRouter(<App />, { initialEntries: ['/drinks'] });
     expect(screen.getByRole('heading', { name: 'Drinks' })).toBeInTheDocument();
     await waitFor(() => {

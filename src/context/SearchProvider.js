@@ -7,7 +7,7 @@ import SearchContext from './SearchContext';
 
 function SearchProvider({ children }) {
   const [visible, setVisible] = useState(false);
-  const { setRecipes } = useContext(RecipesContext);
+  const { setRecipes, setRecipeDetails } = useContext(RecipesContext);
   const history = useHistory();
 
   const selectApi = ({ searchInput, searchRadio, path }) => {
@@ -18,8 +18,12 @@ function SearchProvider({ children }) {
       return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/search.php?s=${searchInput}`;
     case 'category':
       return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/filter.php?c=${searchInput}`;
-    default:
+    case 'first-letter':
       return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/search.php?f=${searchInput}`;
+    case 'recommendation':
+      return `https://www.the${path === '/meals' ? 'cocktail' : 'meal'}db.com/api/json/v1/1/search.php?s=`;
+    default:
+      return `https://www.${path === '/meals' ? 'themealdb' : 'thecocktaildb'}.com/api/json/v1/1/lookup.php?i=${searchInput}`;
     }
   };
 
@@ -28,12 +32,19 @@ function SearchProvider({ children }) {
     const data = await fetchData(selectApi(params));
     if (data.length === 0) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
+      return;
     }
-    setRecipes(data ?? []);
-    if (data.length === 1 && searchRadio !== 'category') {
-      history.push(`${path}/${data[0].idMeal || data[0].idDrink}`);
+    if (searchRadio.toLowerCase() === 'lookup') {
+      setRecipeDetails(data[0] ?? {});
+    } else if (searchRadio.toLowerCase() === 'recommendation') {
+      return data;
+    } else {
+      setRecipes(data ?? []);
+      if (data.length === 1 && searchRadio.toLowerCase() !== 'category') {
+        history.push(`${path}/${data[0].idMeal || data[0].idDrink}`);
+      }
     }
-  }, [setRecipes, history]);
+  }, [setRecipes, setRecipeDetails, history]);
 
   const contextValue = useMemo(() => ({
     visible, setVisible, handleSearch,

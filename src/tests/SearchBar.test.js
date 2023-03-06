@@ -123,7 +123,7 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(buttonSearch);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(5);
+      expect(global.fetch).toHaveBeenCalledTimes(7);
       expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=Chicken Alfredo Primavera');
       expect(history.location.pathname).toBe('/meals/52796');
     });
@@ -149,9 +149,9 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(screen.getByTestId(SEARCH_BTN_TESTID));
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(8);
+      expect(global.fetch).toHaveBeenCalledTimes(11);
       expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=NAOEXISTE');
-      expect(global.alert).toHaveBeenCalledTimes(3);
+      expect(global.alert).toHaveBeenCalledTimes(4);
     });
   });
 });
