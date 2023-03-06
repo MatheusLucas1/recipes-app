@@ -30,6 +30,12 @@ describe('Testa o componente SearchBar', () => {
 
   test('Testa os componentes da SearchBar', async () => {
     renderWithRouter(<App />, { initialEntries: ['/meals'] });
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+      expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+      expect(screen.getAllByTestId(/recipe-card/i)).toHaveLength(11);
+    });
 
     const openSearchBtn = screen.getByTestId(OPEN_SEARCH_BTN_TESTID);
     userEvent.click(openSearchBtn);
@@ -43,6 +49,13 @@ describe('Testa o componente SearchBar', () => {
 
   test('Testa os filtros e requisições da SearchBar', async () => {
     const { history } = renderWithRouter(<App />, { initialEntries: ['/meals'] });
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+      expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+      expect(screen.getAllByTestId(/recipe-card/i)).toHaveLength(11);
+    });
+
     const openSearchBtn = screen.getByTestId(OPEN_SEARCH_BTN_TESTID);
     userEvent.click(openSearchBtn);
 
@@ -57,7 +70,7 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(buttonSearch);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(global.fetch).toHaveBeenCalledTimes(3);
       expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=chicken');
       expect(screen.getAllByTestId(/recipe-card/i)).toHaveLength(11);
     });
@@ -71,7 +84,7 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(buttonSearch);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(global.fetch).toHaveBeenCalledTimes(3);
     });
 
     expect(global.alert).toHaveBeenCalledTimes(2);
@@ -92,7 +105,7 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(buttonSearch);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenCalledTimes(4);
       expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?f=c');
       expect(screen.getAllByTestId(/recipe-card/i)).toHaveLength(5);
     });
@@ -110,7 +123,7 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(buttonSearch);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(3);
+      expect(global.fetch).toHaveBeenCalledTimes(7);
       expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=Chicken Alfredo Primavera');
       expect(history.location.pathname).toBe('/meals/52796');
     });
@@ -136,9 +149,9 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(screen.getByTestId(SEARCH_BTN_TESTID));
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(4);
+      expect(global.fetch).toHaveBeenCalledTimes(11);
       expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=NAOEXISTE');
-      expect(global.alert).toHaveBeenCalledTimes(3);
+      expect(global.alert).toHaveBeenCalledTimes(4);
     });
   });
 });
