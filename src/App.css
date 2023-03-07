@@ -66,3 +66,19 @@
     transform: rotate(-10deg);
   }
 }
+
+.Toastify__toast--success {
+  background: #51CA73 !important;
+  border-radius: 50px !important;
+  bottom: 48px;
+  color: '#5061fc' !important;
+  left: 50%;
+  max-width: 150px;
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.Toastify__toast > button {
+  display: none;
+}

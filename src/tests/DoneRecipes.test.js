@@ -48,12 +48,14 @@ describe('Testa o componente Header', () => {
 
     const foodName = await screen.findByRole('heading', { level: 5, name: /Spicy Arrabiata Penne/i });
 
-    const drinkName = await screen.findByRole('heading', { level: 5, name: /aquamarine/i });
+    const drinkName = await screen.findByText('', { level: 5, name: /Aquamarine/i });
 
     expect(foodName).toBeInTheDocument();
     expect(drinkName).toBeInTheDocument();
 
     userEvent.click(drinkFilterBtn);
+
+    console.log(foodName);
 
     expect(foodName).not.toBeInTheDocument();
     expect(drinkName).toBeInTheDocument();
@@ -82,13 +84,33 @@ describe('Testa o componente Header', () => {
     expect(drinkName).toBeInTheDocument();
   });
 
-  // test('Testa ao clicar para compartilhar a rota da receita, o endereço é copiado para o clipboard', async () => {
-  //   const shareBtn = await screen.findByTestId('0-horizontal-share-btn');
+  test('Testa ao clicar para compartilhar a rota da receita, o endereço é copiado para o clipboard', async () => {
+    const originalClipboard = { ...global.navigator.clipboard };
 
-  //   expect(shareBtn).toBeInTheDocument();
+    const mockData = 'http://localhost:3000/meals/52771';
 
-  //   userEvent.click(shareBtn);
+    const mockClipboard = {
+      writeText: jest.fn(),
+    };
+    global.navigator.clipboard = mockClipboard;
 
-  //   expect(screen.findByText('Link copied!')).toBeInTheDocument();
-  // });
+    jest.useFakeTimers();
+    jest.spyOn(global, 'setTimeout');
+
+    const shareBtn = await screen.findByTestId('0-horizontal-share-btn');
+
+    expect(shareBtn).toBeInTheDocument();
+
+    userEvent.click(shareBtn);
+
+    expect(navigator.clipboard.writeText).toBeCalledTimes(1);
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockData);
+
+    expect(setTimeout).toBeCalledTimes(2);
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000);
+
+    jest.resetAllMocks();
+    global.navigator.clipboard = originalClipboard;
+  });
 });

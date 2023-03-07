@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import { useMemo, useCallback, useEffect, useState } from 'react';
 import copy from 'clipboard-copy';
+import { toast } from 'react-toastify';
 import DoneRecipesContext from './DoneRecipesContext';
 
 function DoneRecipesProvider({ children }) {
   const [completedRecipes, setCompletedRecipes] = useState([]);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     function setMock() {
@@ -42,11 +42,7 @@ function DoneRecipesProvider({ children }) {
 
   const shareRecipe = useCallback((id, type) => {
     copy(`http://localhost:3000/${type}s/${id}`);
-    setVisible(true);
-    const number = 2000;
-    setTimeout(() => {
-      setVisible(false);
-    }, number);
+    toast.success('Link copied!');
   }, []);
 
   const handleFilterFoods = useCallback(() => {
@@ -68,15 +64,11 @@ function DoneRecipesProvider({ children }) {
 
   const contextValue = useMemo(() => ({
     completedRecipes,
-    visible,
-    setVisible,
     shareRecipe,
     handleFilterDrinks,
     handleFilterFoods,
     handleClearFilters,
   }), [completedRecipes,
-    visible,
-    setVisible,
     shareRecipe,
     handleClearFilters,
     handleFilterDrinks,

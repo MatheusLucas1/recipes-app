@@ -2,21 +2,19 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
-import ToastContainer from './ToastContainer';
 import DoneRecipesContext from '../context/DoneRecipesContext';
 
 function DoneRecipes() {
   const { completedRecipes,
-    visible,
     shareRecipe,
     handleClearFilters,
     handleFilterDrinks,
-    handleFilterFoods } = useContext(DoneRecipesContext);
+    handleFilterFoods,
+  } = useContext(DoneRecipesContext);
   return (
     <>
       <Header name="Receitas Feitas" show="false" />
       <div>
-        <ToastContainer visible={ visible } />
         <div>
           <button
             type="button"
@@ -45,6 +43,7 @@ function DoneRecipes() {
             <Link to={ `/${recipes.type}s/${recipes.id}` }>
               <div>
                 <img
+                  style={ { maxWidth: '200px' } }
                   src={ recipes.image }
                   alt="recipes"
                   data-testid={ `${index}-horizontal-image` }
