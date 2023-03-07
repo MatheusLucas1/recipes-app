@@ -1,12 +1,23 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import './css/RecipeCard.css';
 
-export default function RecipeCard({ id, name, image }) {
+export default function RecipeCard({ id, name, image, path }) {
+  const history = useHistory();
+  const handleSelect = () => {
+    history.push(path);
+  };
+
   return (
-    <div data-testid={ `${id}-recipe-card` }>
+    <button
+      data-testid={ `${id}-recipe-card` }
+      className="recipeCard"
+      onClick={ handleSelect }
+    >
       <img src={ image } alt={ name } data-testid={ `${id}-card-img` } />
       <p data-testid={ `${id}-card-name` }>{name}</p>
-    </div>
+    </button>
   );
 }
 

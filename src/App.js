@@ -7,15 +7,18 @@ import LoginProvider from './context/LoginProvider';
 import SearchProvider from './context/SearchProvider';
 import RecipesProvider from './context/RecipesProvider';
 import DoneRecipesProvider from './context/DoneRecipesProvider';
+import CategoriesProvider from './context/CategoriesProvider';
 
 function App() {
   return (
     <LoginProvider>
+    <ToastContainer />
       <RecipesProvider>
-        <ToastContainer />
         <DoneRecipesProvider>
           <SearchProvider>
-            <Routes />
+            <CategoriesProvider>
+              <Routes />
+            </CategoriesProvider>
           </SearchProvider>
         </DoneRecipesProvider>
       </RecipesProvider>
