@@ -5,6 +5,11 @@ import SearchContext from '../context/SearchContext';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
+import CategoriesFilter from './CategoriesFilter';
+import headerLogo from '../images/headerLogo.png';
+import mealIcon from '../images/mealIcon.png';
+import drinkIcon from '../images/drinkIcon.png';
+import './css/Header.css';
 
 function Header({ title, showSearch = true }) {
   const history = useHistory();
@@ -15,23 +20,40 @@ function Header({ title, showSearch = true }) {
   };
 
   return (
-    <div>
-      <h1 data-testid="page-title">{title}</h1>
-      <button type="button" onClick={ handleClickProfile }>
-        <img src={ profileIcon } alt="Ícone de Perfil" data-testid="profile-top-btn" />
-      </button>
-      {
-        showSearch && (
-          <button type="button" onClick={ () => setVisible(!visible) }>
-            <img src={ searchIcon } alt="Ícone de Busca" data-testid="search-top-btn" />
+    <div className="header">
+      <div className="headerAppName">
+        <img src={ headerLogo } alt="" />
+        <div className="headerButtons">
+          {
+            showSearch && (
+              <button type="button" onClick={ () => setVisible(!visible) }>
+                <img
+                  src={ searchIcon }
+                  alt="Ícone de Busca"
+                  data-testid="search-top-btn"
+                />
+              </button>
+            )
+          }
+          <button type="button" onClick={ handleClickProfile }>
+            <img
+              src={ profileIcon }
+              alt="Ícone de Perfil"
+              data-testid="profile-top-btn"
+            />
           </button>
-        )
-      }
+        </div>
+      </div>
+      <div className="headerTitle">
+        <img src={ title === 'Meals' ? mealIcon : drinkIcon } alt="Type of Food Icon" />
+        <h1 data-testid="page-title">{title}</h1>
+      </div>
       {
         visible && (
           <SearchBar />
         )
       }
+      <CategoriesFilter />
     </div>
   );
 }
