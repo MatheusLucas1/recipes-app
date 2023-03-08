@@ -13,6 +13,7 @@ export default function RecipeInProgress() {
   const { pathname } = history.location;
   const [checkedIngredients, setCheckedIngredients] = useState([]);
   const [isCopied, setIsCopied] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
   const [details, setDetails] = useState({
     id: '',
     image: '',
@@ -122,6 +123,14 @@ export default function RecipeInProgress() {
     }
   };
 
+  useEffect(() => {
+    if (checkedIngredients.length === details.ingredients.length) {
+      setIsFinished(true);
+    } else {
+      setIsFinished(false);
+    }
+  }, [checkedIngredients, details.ingredients]);
+
   return (
     <div>
       <header>
@@ -177,7 +186,14 @@ export default function RecipeInProgress() {
         <p data-testid="instructions">{ details.instructions }</p>
       </section>
       <footer>
-        <button type="button" data-testid="finish-recipe-btn">FINISH RECIPE</button>
+        <button
+          type="button"
+          data-testid="finish-recipe-btn"
+          disabled={ !isFinished }
+        >
+          FINISH RECIPE
+
+        </button>
       </footer>
     </div>
   );
