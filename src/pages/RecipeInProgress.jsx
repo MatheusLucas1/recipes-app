@@ -17,13 +17,15 @@ export default function RecipeInProgress() {
   const [details, setDetails] = useState({
     id: '',
     image: '',
-    title: '',
+    name: '',
     category: '',
     ingredients: [],
-    video: undefined,
     instructions: '',
     nationality: '',
     alcoholicOrNot: '',
+    tags: [],
+    type: '',
+    doneDate: '',
   });
   const [favoritesRecipes, setFavoritesRecipes] = useState(
     JSON.parse(localStorage.getItem('favoriteRecipes')) || [],
@@ -52,18 +54,29 @@ export default function RecipeInProgress() {
         ingredients.push(recipeDetails[key]);
       }
     });
+    const tags = [];
+    const tagsKey = keys.filter((key) => key.includes('strTags'));
+    tagsKey.forEach((key) => {
+      if (recipeDetails[key] !== null) {
+        const tagsString = recipeDetails[key];
+        const separatedTags = tagsString.split(',');
+        tags.push(...separatedTags);
+      }
+    });
+
+    const dateNow = new Date();
     setDetails({
       id: (recipeDetails.idMeal || recipeDetails.idDrink) ?? '',
       image: recipeDetails.strMealThumb || recipeDetails.strDrinkThumb,
-      title: recipeDetails.strMeal || recipeDetails.strDrink,
+      name: recipeDetails.strMeal || recipeDetails.strDrink,
       category: recipeDetails.strCategory,
       ingredients,
-      video: recipeDetails.strYoutube ? (
-        recipeDetails.strYoutube.replace('watch?v=', 'embed/')
-      ) : undefined,
       instructions: recipeDetails.strInstructions,
-      nationality: recipeDetails.strArea,
-      alcoholicOrNot: recipeDetails.strAlcoholic,
+      nationality: (recipeDetails.strArea) ? recipeDetails.strArea : '',
+      alcoholicOrNot: (recipeDetails.strAlcoholic) ? recipeDetails.strAlcoholic : '',
+      tags,
+      type: (recipeDetails.strMeal) ? 'meal' : 'drink',
+      doneDate: dateNow,
     });
   }, [recipeDetails]);
 
@@ -88,7 +101,7 @@ export default function RecipeInProgress() {
   };
 
   const handleShare = () => {
-    const URL = `${window.location.origin}${pathname.replace('/in-progress', '')}`;
+    const URL = `${window.location.origin}:3000${pathname.replace('/in-progress', '')}`;
     setIsCopied(true);
     copy(URL);
     console.log(URL);
@@ -107,12 +120,12 @@ export default function RecipeInProgress() {
     } else {
       const newFavoriteRecipe = {
         id: details.id,
-        type: pathname.split('/')[1].slice(0, lessOne),
         nationality: details.nationality ?? '',
+        name: details.name,
         category: details.category,
-        alcoholicOrNot: details.alcoholicOrNot ?? '',
-        name: details.title,
         image: details.image,
+        alcoholicOrNot: details.alcoholicOrNot ?? '',
+        type: pathname.split('/')[1].slice(0, lessOne),
       };
       localStorage.setItem('favoriteRecipes', JSON.stringify([
         ...favoritesRecipes,
@@ -120,6 +133,18 @@ export default function RecipeInProgress() {
       ]));
       setFavoritesRecipes([...favoritesRecipes, newFavoriteRecipe]);
       setIsRecipeFavorite(true);
+    }
+  };
+
+  const handleFinishClick = (recipe) => {
+    const finishedRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
+
+    delete recipe.ingredients;
+    delete recipe.instructions;
+    if (!finishedRecipes.includes(recipe)) {
+      const updatedFinishedRecipes = [...finishedRecipes, recipe];
+      localStorage.setItem('doneRecipes', JSON.stringify(updatedFinishedRecipes));
+      history.push('/done-recipes');
     }
   };
 
@@ -159,14 +184,15 @@ export default function RecipeInProgress() {
         <img
           data-testid="recipe-photo"
           src={ details.image }
-          alt={ details.title }
+          alt={ details.name }
         />
-        <h1 data-testid="recipe-title">{ details.title }</h1>
+        <h1 data-testid="recipe-title">{ details.name }</h1>
       </header>
 
       {details.ingredients.map((ingredient, index) => (
         <label
           key={ `${details.id}-${index}` }
+          id="checkbox"
           data-testid={ `${index}-ingredient-step` }
           style={ { textDecoration: (
             checkedIngredients.includes(index)
@@ -174,6 +200,7 @@ export default function RecipeInProgress() {
         >
           <input
             type="checkbox"
+            // mudar index para ingredient
             checked={ checkedIngredients.includes(index) }
             onChange={ (event) => handleCheckboxChange(event, index) }
           />
@@ -190,6 +217,7 @@ export default function RecipeInProgress() {
           type="button"
           data-testid="finish-recipe-btn"
           disabled={ !isFinished }
+          onClick={ () => handleFinishClick(details) }
         >
           FINISH RECIPE
 
