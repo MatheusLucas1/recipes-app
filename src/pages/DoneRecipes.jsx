@@ -13,7 +13,7 @@ function DoneRecipes() {
   } = useContext(DoneRecipesContext);
   return (
     <>
-      <Header name="Receitas Feitas" show="false" />
+      <Header name="Done Recipes" show="false" />
       <div>
         <div>
           <button

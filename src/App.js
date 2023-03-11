@@ -12,7 +12,7 @@ import CategoriesProvider from './context/CategoriesProvider';
 function App() {
   return (
     <LoginProvider>
-    <ToastContainer />
+      <ToastContainer />
       <RecipesProvider>
         <DoneRecipesProvider>
           <SearchProvider>
