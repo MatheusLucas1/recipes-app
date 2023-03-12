@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import './css/DoneRecipes.css';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
@@ -13,9 +14,9 @@ function DoneRecipes() {
   } = useContext(DoneRecipesContext);
   return (
     <>
-      <Header name="Done Recipes" show="false" />
+      <Header title="Done Recipes" showSearch={ false } />
       <div>
-        <div>
+        <div className="btns">
           <button
             type="button"
             data-testid="filter-by-all-btn"
@@ -39,11 +40,11 @@ function DoneRecipes() {
           </button>
         </div>
         {completedRecipes.map((recipes, index) => (
-          <div key={ index } className="card">
+          <div key={ index } className="recipesCard">
             <Link to={ `/${recipes.type}s/${recipes.id}` }>
-              <div>
+              <div className="image">
                 <img
-                  style={ { maxWidth: '200px' } }
+                  className="recipePhoto"
                   src={ recipes.image }
                   alt="recipes"
                   data-testid={ `${index}-horizontal-image` }
@@ -51,37 +52,39 @@ function DoneRecipes() {
               </div>
             </Link>
             <div>
-              <div
-                data-testid={ `${index}-horizontal-top-text` }
-              >
-                {`${recipes.nationality} - ${recipes.category}`}
-              </div>
-              <Link to={ `/${recipes.type}s/${recipes.id}` }>
+              <Link to={ `/${recipes.type}s/${recipes.id}` } className="name">
                 <h5
                   data-testid={ `${index}-horizontal-name` }
                 >
                   { recipes.name }
                 </h5>
               </Link>
-              {recipes.tags.map((tag) => (
-                <span
-                  className="badge rounded-pill bg-info text-dark"
-                  key={ `${tag}-${index}` }
-                  data-testid={ `${index}-${tag}-horizontal-tag` }
-                >
-                  {tag}
-                </span>
-              ))}
-              <button
-                data-testid={ `${index}-horizontal-share-btn` }
-                type="button"
-                onClick={ () => shareRecipe(recipes.id, recipes.type) }
-                src={ shareIcon }
+              <div
+                className="badge"
+                data-testid={ `${index}-horizontal-top-text` }
               >
-                <img src={ shareIcon } alt="heart icon" />
-              </button>
+                { recipes.nationality && `${recipes.nationality} - ${recipes.category}`}
+                {!recipes.nationality && `${recipes.category}`}
+              </div>
+              {' '}
+              {recipes.tags.map((tag) => (
+                <>
+                  <span
+                    className="badge"
+                    key={ `${tag}-${index}` }
+                    data-testid={ `${index}-${tag}-horizontal-tag` }
+                  >
+                    {tag}
+                  </span>
+                  <span>
+                    {' '}
+                  </span>
+                </>
+              ))}
+
               <span
-                style={ { display: recipes.type === 'meal' ? null : 'none' } }
+                className="badge rounded-pill bg-warning text-dark"
+                style={ { display: recipes.type === 'meal' ? null : false } }
                 data-testid={ `${index}-horizontal-top-text` }
               >
                 { recipes.alcoholicOrNot}
@@ -89,10 +92,20 @@ function DoneRecipes() {
               <div
                 data-testid={ `${index}-horizontal-done-date` }
               >
-                Feito em:
+                Done in:
+                {' '}
                 { recipes.doneDate }
               </div>
             </div>
+            <button
+              className="btn"
+              data-testid={ `${index}-horizontal-share-btn` }
+              type="button"
+              onClick={ () => shareRecipe(recipes.id, recipes.type) }
+              src={ shareIcon }
+            >
+              <img src={ shareIcon } alt="heart icon" />
+            </button>
           </div>
         ))}
       </div>
