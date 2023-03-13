@@ -111,7 +111,7 @@ describe('Testa a Tela Detalhes da Receita', () => {
 
     localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
 
-    const { history } = renderWithRouter(<App />, { initialEntries: [MEALS_PATH] });
+    renderWithRouter(<App />, { initialEntries: [MEALS_PATH] });
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -149,7 +149,7 @@ describe('Testa a Tela Detalhes da Receita', () => {
 
     localStorage.setItem('ceckedIngredients', JSON.stringify(ceckedIngredients));
 
-    const { history } = renderWithRouter(<App />, { initialEntries: [MEALS_PATH] });
+    renderWithRouter(<App />, { initialEntries: [MEALS_PATH] });
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
