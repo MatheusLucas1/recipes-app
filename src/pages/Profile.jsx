@@ -4,14 +4,13 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 function Profile() {
-  const saveEmail = localStorage.getItem('user');
-  const checkEmail = JSON.parse(saveEmail);
+  const savedEmail = JSON.parse(localStorage.getItem('user')) || { email: '' };
 
   return (
     <div>
-      <Header />
+      <Header title="Profile" showSearch={ false } />
       <div>
-        <h1 data-testid="profile-email">{ checkEmail.email }</h1>
+        <h1 data-testid="profile-email">{ savedEmail.email }</h1>
         <Link to="/done-recipes">
           <button data-testid="profile-done-btn">Done Recipes</button>
         </Link>
