@@ -68,10 +68,10 @@
 }
 
 .Toastify__toast--success {
-  background: #51CA73 !important;
-  border-radius: 50px !important;
+  background: #51ca73;
+  border-radius: 50px;
   bottom: 48px;
-  color: '#5061fc' !important;
+  color: '#5061fc';
   left: 50%;
   max-width: 150px;
   position: fixed;
