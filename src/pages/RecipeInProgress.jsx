@@ -5,6 +5,7 @@ import RecipesContext from '../context/RecipesContext';
 import SearchContext from '../context/SearchContext';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import './css/RecipeInProgress.css';
 
 export default function RecipeInProgress() {
   const { recipeDetails } = useContext(RecipesContext);
@@ -157,64 +158,73 @@ export default function RecipeInProgress() {
   }, [checkedIngredients, details.ingredients]);
 
   return (
-    <div>
-      <header>
-        <button
-          type="button"
-          data-testid="share-btn"
-          onClick={ handleShare }
-        >
-          {isCopied ? 'Link copied!' : 'Share'}
+    <div className="recipeinProgressPage">
+      <div>
+        <section className="buttonsSection">
+          <button
+            type="button"
+            className="shareBtn"
+            data-testid="share-btn"
+            onClick={ handleShare }
+          >
+            {isCopied ? 'Link copied!' : 'Share'}
 
-        </button>
-        <button
-          type="button"
-          onClick={ handleFavoriteBtn }
-          value={ details.id }
-        >
+          </button>
+          <button
+            type="button"
+            className="favoriteBtn"
+            onClick={ handleFavoriteBtn }
+            value={ details.id }
+          >
+            <img
+              data-testid="favorite-btn"
+              src={ isRecipeFavorite ? blackHeartIcon : whiteHeartIcon }
+              alt="Favorite"
+            />
+          </button>
+        </section>
+
+        <header className="recipesInProgressHeader">
+          <h2 data-testid="recipe-category">
+            { details.category }
+          </h2>
           <img
-            data-testid="favorite-btn"
-            src={ isRecipeFavorite ? blackHeartIcon : whiteHeartIcon }
-            alt="Favorite"
+            data-testid="recipe-photo"
+            className="recipePhoto"
+            src={ details.image }
+            alt={ details.name }
           />
-        </button>
-        <p data-testid="recipe-category">
-          { details.category }
-        </p>
-        <img
-          data-testid="recipe-photo"
-          src={ details.image }
-          alt={ details.name }
-        />
-        <h1 data-testid="recipe-title">{ details.name }</h1>
-      </header>
+          <h1 data-testid="recipe-title" className="title">{ details.name }</h1>
+        </header>
 
-      {details.ingredients.map((ingredient, index) => (
-        <label
-          key={ `${details.id}-${index}` }
-          id="checkbox"
-          data-testid={ `${index}-ingredient-step` }
-          style={ { textDecoration: (
-            checkedIngredients.includes(index)
-              ? 'line-through solid rgb(0, 0, 0)' : 'none') } }
-        >
-          <input
-            type="checkbox"
-            // mudar index para ingredient
-            checked={ checkedIngredients.includes(index) }
-            onChange={ (event) => handleCheckboxChange(event, index) }
-          />
-          {ingredient}
-        </label>
-      ))}
-
-      <section>
+        {details.ingredients.map((ingredient, index) => (
+          <label
+            className="checkbox"
+            key={ `${details.id}-${index}` }
+            id="checkbox"
+            data-testid={ `${index}-ingredient-step` }
+            style={ { textDecoration: (
+              checkedIngredients.includes(index)
+                ? 'line-through solid rgb(0, 0, 0)' : 'none') } }
+          >
+            <input
+              type="checkbox"
+              // mudar index para ingredient
+              checked={ checkedIngredients.includes(index) }
+              onChange={ (event) => handleCheckboxChange(event, index) }
+            />
+            {ingredient}
+          </label>
+        ))}
+      </div>
+      <section className="instructions">
         <h4>Instructions</h4>
         <p data-testid="instructions">{ details.instructions }</p>
       </section>
       <footer>
         <button
           type="button"
+          className="finishRecipeBtn"
           data-testid="finish-recipe-btn"
           disabled={ !isFinished }
           onClick={ () => handleFinishClick(details) }
