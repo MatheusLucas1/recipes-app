@@ -7,6 +7,7 @@ import { doneRecipes } from './helpers/mocks/doneRecipes';
 
 describe('Testa o componente Header', () => {
   beforeEach(() => {
+    
     localStorage.clear();
     localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
     renderWithRouter(<App />, { initialEntries: ['/done-recipes'] });
