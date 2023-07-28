@@ -38,4 +38,3 @@ $ npm start
 
 - [Matheus Lucas](https://github.com/MatheusLucas1)
 
-## Licença
